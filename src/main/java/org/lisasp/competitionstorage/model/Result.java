@@ -16,5 +16,5 @@ public class Result {
 
     @Getter
     @Setter
-    private byte[] data;
+    private String resultId;
 }

@@ -16,5 +16,5 @@ public class Asset {
 
     @Getter
     @Setter
-    private byte[] data;
+    private String resultId;
 }
