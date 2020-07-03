@@ -2,7 +2,11 @@ package org.lisasp.competitionstorage.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.lisasp.competitionstorage.dto.AssetDto;
+import org.lisasp.competitionstorage.dto.ResultDto;
 import org.springframework.data.annotation.Id;
+
+import java.util.Arrays;
 
 public class Result {
 
@@ -16,5 +20,14 @@ public class Result {
 
     @Getter
     @Setter
-    private String resultId;
+    private byte[] data;
+
+    public ResultDto extractDto() {
+        ResultDto dto = new ResultDto();
+        dto.setId(id);
+        dto.setName(name);
+        dto.setData(Arrays.copyOf(data, data.length));
+        return dto;
+    }
+
 }

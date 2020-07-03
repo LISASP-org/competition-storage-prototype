@@ -4,4 +4,7 @@ import org.lisasp.competitionstorage.dto.DtoBase;
 import org.lisasp.competitionstorage.logic.base.CompetitionCommand;
 
 public class ReopenCompetition extends DtoBase implements CompetitionCommand {
+    public ReopenCompetition(String id) {
+        super(id);
+    }
 }

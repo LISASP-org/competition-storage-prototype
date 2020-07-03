@@ -2,9 +2,11 @@ package org.lisasp.competitionstorage.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.lisasp.competitionstorage.dto.AssetDto;
 import org.lisasp.competitionstorage.dto.CompetitionDto;
 import org.lisasp.competitionstorage.logic.IdGenerator;
 import org.lisasp.competitionstorage.logic.command.*;
+import org.lisasp.competitionstorage.logic.exception.AssetNotFoundException;
 import org.lisasp.competitionstorage.logic.exception.CompetitionAlreadyExistsException;
 import org.springframework.data.annotation.Id;
 
@@ -12,10 +14,12 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Competition {
 
-    private static IdGenerator ids = new IdGenerator();
+    private static final IdGenerator ids = new IdGenerator();
 
     @Id
     @Getter
@@ -30,7 +34,7 @@ public class Competition {
     @Getter
     @Setter
     @NotNull
-    private String shortname;
+    private String shortName;
 
     @Getter
     @Setter
@@ -72,16 +76,14 @@ public class Competition {
     public Competition() {
     }
 
-    public CompetitionDto apply(RegisterCompetition command) {
+    public void apply(RegisterCompetition command) {
         assertNew();
         importData(command.getData());
         initialize();
-        return extractDto();
     }
 
-    public CompetitionDto apply(EditCompetition command) {
+    public void apply(UpdateCompetition command) {
         importData(command.getData());
-        return extractDto();
     }
 
     public void apply(AcceptCompetition command) {
@@ -100,6 +102,23 @@ public class Competition {
         // Todo: Not yet implemented
     }
 
+    public String apply(AddAsset addAsset) {
+        Asset asset = new Asset();
+        asset.setId(ids.generate());
+        asset.setName(addAsset.getName());
+        asset.setData(addAsset.getData());
+        assets.add(asset);
+        return asset.getId();
+    }
+
+    public String apply(UpdateAsset updateAsset) {
+        Asset asset = getAsset(updateAsset.getAssetId());
+        asset.setName(updateAsset.getName());
+        asset.setData(updateAsset.getData());
+        assets.add(asset);
+        return asset.getId();
+    }
+
     private void assertNew() {
         if (id != null && !id.trim().isEmpty()) {
             throw new CompetitionAlreadyExistsException(id);
@@ -110,7 +129,7 @@ public class Competition {
         CompetitionDto dto = new CompetitionDto();
         dto.setId(id);
         dto.setName(name);
-        dto.setShortname(shortname);
+        dto.setShortName(shortName);
         dto.setStartDate(startDate);
         dto.setEndDate(endDate);
         dto.setLocation(location);
@@ -133,12 +152,32 @@ public class Competition {
     private void importData(CompetitionDto dto) {
         id = dto.getId();
         name = dto.getName();
-        shortname = dto.getShortname();
+        shortName = dto.getShortName();
         startDate = dto.getStartDate();
         endDate = dto.getEndDate();
         location = dto.getLocation();
         country = dto.getCountry();
         organization = dto.getOrganization();
         description = dto.getDescription();
+    }
+
+    private Asset getAsset(String assetId) {
+        Optional<Asset> asset = assets.stream().filter(a -> a.getId().equals(assetId)).findFirst();
+        if (asset.isEmpty()) {
+            throw new AssetNotFoundException(getId(), assetId);
+        }
+        return asset.get();
+    }
+
+    public Optional<AssetDto> getAssetDto(String assetId) {
+        return assets.stream().filter(a -> a.getId().equals(assetId)).map(a -> a.extractDto()).findFirst();
+    }
+
+    public List<AssetDto> getAssetDtos() {
+        return assets.stream().map(a -> a.extractDto()).collect(Collectors.toList());
+    }
+
+    public void apply(RemoveAsset removeAsset) {
+        assets.removeIf(a -> a.getId().equals(removeAsset.getAssetId()));
     }
 }

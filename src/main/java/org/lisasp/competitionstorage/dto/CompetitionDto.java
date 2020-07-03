@@ -15,7 +15,7 @@ public class CompetitionDto extends DtoBase {
     @Getter
     @Setter
     @NotNull
-    private String shortname;
+    private String shortName;
 
     @Getter
     @Setter

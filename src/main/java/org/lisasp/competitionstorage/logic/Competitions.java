@@ -1,17 +1,17 @@
 package org.lisasp.competitionstorage.logic;
 
-import org.lisasp.competitionstorage.logic.command.AcceptCompetition;
-import org.lisasp.competitionstorage.logic.command.EditCompetition;
-import org.lisasp.competitionstorage.logic.command.RegisterCompetition;
+import org.lisasp.competitionstorage.dto.AssetDto;
+import org.lisasp.competitionstorage.dto.CompetitionDto;
+import org.lisasp.competitionstorage.logic.command.*;
 import org.lisasp.competitionstorage.logic.exception.CompetitionNotFoundException;
 import org.lisasp.competitionstorage.logic.exception.IdMissingException;
 import org.lisasp.competitionstorage.model.Competition;
 import org.lisasp.competitionstorage.repository.CompetitionRepository;
-import org.lisasp.competitionstorage.dto.CompetitionDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,16 +20,15 @@ import java.util.stream.Collectors;
 public class Competitions {
 
     private final CompetitionRepository repository;
-    private final IdGenerator ids;
 
-    public CompetitionDto apply(RegisterCompetition command) {
+    public String apply(RegisterCompetition command) {
         Competition competition = new Competition();
-        CompetitionDto result = competition.apply(command);
+        competition.apply(command);
         repository.save(competition);
-        return result;
+        return competition.getId();
     }
 
-    public void apply(EditCompetition command) {
+    public void apply(UpdateCompetition command) {
         Competition competition = get(command.getId());
         competition.apply(command);
         repository.save(competition);
@@ -41,21 +40,41 @@ public class Competitions {
         repository.save(competition);
     }
 
-    public Competitions(CompetitionRepository repository, IdGenerator idGenerator) {
-        this.repository = repository;
-        this.ids = idGenerator;
+    public void apply(RevokeCompetition command) {
+        Competition competition = get(command.getId());
+        competition.apply(command);
+        repository.save(competition);
     }
 
-    public List<CompetitionDto> find(Optional<String> name) {
-        if (name.isPresent()) {
-            Competition c = repository.findByName(name.get());
-            if (c == null) {
-                return new ArrayList<CompetitionDto>();
-            }
-            return Arrays.asList(c.extractDto());
-        }
+    public void apply(ReopenCompetition command) {
+        Competition competition = get(command.getId());
+        competition.apply(command);
+        repository.save(competition);
+    }
 
-        return repository.findAll().stream().map(c -> c.extractDto()).collect(Collectors.toList());
+    public void apply(FinalizeCompetition command) {
+        Competition competition = get(command.getId());
+        competition.apply(command);
+        repository.save(competition);
+    }
+
+    public String apply(AddAsset addAsset) {
+        Competition c = get(addAsset.getId());
+        String assetId = c.apply(addAsset);
+        repository.save(c);
+        return assetId;
+    }
+
+    public String apply(UpdateAsset addAsset) {
+        Competition c = get(addAsset.getId());
+        String assetId = c.apply(addAsset);
+        repository.save(c);
+        return assetId;
+    }
+
+    @Autowired
+    public Competitions(CompetitionRepository repository) {
+        this.repository = repository;
     }
 
     private Competition get(String id) {
@@ -80,5 +99,40 @@ public class Competitions {
     public void delete(String id) {
         assertExists(id);
         repository.deleteById(id);
+    }
+
+    public List<CompetitionDto> findByName(String name) {
+        Competition c = repository.findByName(toValidName(name));
+        if (c == null) {
+            return new ArrayList<>();
+        }
+        return Collections.singletonList(c.extractDto());
+    }
+
+    private String toValidName(String name) {
+        if (name == null) {
+            return "";
+        }
+        return name.trim();
+    }
+
+    public List<CompetitionDto> findAll() {
+        return repository.findAll().stream().map(c -> c.extractDto()).collect(Collectors.toList());
+    }
+
+    public Optional<AssetDto> findAsset(String competitionId, String assetId) {
+        Competition c = get(competitionId);
+        return c.getAssetDto(assetId);
+    }
+
+    public List<AssetDto> findAssets(String id) {
+        Competition c = get(id);
+        return c.getAssetDtos();
+    }
+
+    public void removeAsset(RemoveAsset removeAsset) {
+        Competition c = get(removeAsset.getId());
+        c.apply(removeAsset);
+        repository.save(c);
     }
 }

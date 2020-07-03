@@ -4,12 +4,12 @@ import lombok.Getter;
 import org.lisasp.competitionstorage.dto.CompetitionDto;
 import org.lisasp.competitionstorage.logic.base.CompetitionCommand;
 
-public class EditCompetition implements CompetitionCommand {
+public class UpdateCompetition implements CompetitionCommand {
 
     @Getter
     private final CompetitionDto data;
 
-    public EditCompetition(CompetitionDto data) {
+    public UpdateCompetition(CompetitionDto data) {
         this.data = data;
         validate();
     }
