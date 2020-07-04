@@ -10,7 +10,7 @@ Stores competitions with their results and additional assets.
 
 ### Build
 
-- copy ```src/main/resources/application-dev.example.yml``` to ```src/main/resources/application-dev.yml```
+- copy ```src/main/resources/application-dev.yml.example``` to ```src/main/resources/application-dev.yml```
 - edit ```src/main/resources/application-dev.yml``` (if needed for mongodb)
 - build ```mvn clean package``` from the project directory
 
