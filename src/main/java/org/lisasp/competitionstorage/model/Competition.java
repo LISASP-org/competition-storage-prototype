@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.lisasp.competitionstorage.dto.AssetDto;
 import org.lisasp.competitionstorage.dto.CompetitionDto;
-import org.lisasp.competitionstorage.logic.IdGenerator;
+import org.lisasp.competitionstorage.logic.exception.IdMissingException;
+import org.lisasp.competitionstorage.logic.exception.IdsNotValidException;
+import org.lisasp.competitionstorage.model.util.IdGenerator;
 import org.lisasp.competitionstorage.logic.command.*;
 import org.lisasp.competitionstorage.logic.exception.AssetNotFoundException;
 import org.lisasp.competitionstorage.logic.exception.CompetitionAlreadyExistsException;
@@ -83,7 +85,8 @@ public class Competition {
         initialize();
     }
 
-    public void apply(UpdateCompetition command) {
+    public void apply(UpdateCompetitionProperties command) {
+        assertId(command.getId());
         importData(command.getData());
     }
 
@@ -112,17 +115,25 @@ public class Competition {
         return asset.getId();
     }
 
-    public String apply(UpdateAsset updateAsset) {
+    public void apply(UpdateAsset updateAsset) {
         Asset asset = getAsset(updateAsset.getAssetId());
         asset.setName(updateAsset.getName());
         asset.setData(updateAsset.getData());
         assets.put(updateAsset.getAssetId(), asset);
-        return asset.getId();
     }
 
     private void assertNew() {
         if (id != null && !id.trim().isEmpty()) {
             throw new CompetitionAlreadyExistsException(id);
+        }
+    }
+
+    private void assertId(String commandId) {
+        if (id == null || id.trim().isEmpty()) {
+            throw new IdMissingException();
+        }
+        if (!id.equals(commandId)) {
+            throw new IdsNotValidException(id, commandId);
         }
     }
 

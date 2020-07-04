@@ -9,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 @RestController()
@@ -100,7 +97,7 @@ public class CompetitionController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     void update(@RequestBody CompetitionDto competition, @PathVariable String id) {
         checkValidityOfIds(competition.getId(), id);
-        competitions.apply(new UpdateCompetition(competition));
+        competitions.apply(new UpdateCompetitionProperties(competition));
     }
 
     @DeleteMapping("/{id}")

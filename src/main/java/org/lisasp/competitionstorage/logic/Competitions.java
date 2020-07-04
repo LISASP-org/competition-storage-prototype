@@ -29,7 +29,7 @@ public class Competitions {
         return competition.getId();
     }
 
-    public void apply(UpdateCompetition command) {
+    public void apply(UpdateCompetitionProperties command) {
         Competition competition = get(command.getId());
         competition.apply(command);
         competition.validate();
@@ -72,12 +72,11 @@ public class Competitions {
         return assetId;
     }
 
-    public String apply(UpdateAsset addAsset) {
+    public void apply(UpdateAsset addAsset) {
         Competition competition = get(addAsset.getId());
-        String assetId = competition.apply(addAsset);
+        competition.apply(addAsset);
         competition.validate();
         repository.save(competition);
-        return assetId;
     }
 
     @Autowired

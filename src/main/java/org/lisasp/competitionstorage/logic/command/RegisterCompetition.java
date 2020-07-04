@@ -3,6 +3,7 @@ package org.lisasp.competitionstorage.logic.command;
 import lombok.Getter;
 import org.lisasp.competitionstorage.dto.CompetitionDto;
 import org.lisasp.competitionstorage.logic.base.CompetitionCommand;
+import org.lisasp.competitionstorage.logic.exception.DtoNotSpecifiedException;
 
 public class RegisterCompetition implements CompetitionCommand {
 
@@ -16,7 +17,7 @@ public class RegisterCompetition implements CompetitionCommand {
 
     private void validate() {
         if (data == null) {
-            throw new NullPointerException();
+            throw new DtoNotSpecifiedException();
         }
     }
 }

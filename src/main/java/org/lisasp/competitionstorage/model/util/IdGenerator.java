@@ -1,4 +1,4 @@
-package org.lisasp.competitionstorage.logic;
+package org.lisasp.competitionstorage.model.util;
 
 import org.springframework.stereotype.Component;
 
