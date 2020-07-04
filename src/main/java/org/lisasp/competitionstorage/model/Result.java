@@ -11,6 +11,7 @@ import java.util.Arrays;
 public class Result {
 
     @Id
+    @Setter
     @Getter
     private String id;
 
@@ -30,4 +31,6 @@ public class Result {
         return dto;
     }
 
+    public void validate() {
+    }
 }

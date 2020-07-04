@@ -9,3 +9,7 @@ spring:
       database: competitions
       port: 27017
       host: localhost
+server:
+  error:
+    whitelabel:
+      enabled: true

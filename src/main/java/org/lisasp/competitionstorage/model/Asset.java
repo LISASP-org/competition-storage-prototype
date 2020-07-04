@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.lisasp.competitionstorage.dto.AssetDto;
 import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 
 public class Asset {
@@ -16,10 +17,12 @@ public class Asset {
 
     @Getter
     @Setter
+    @NotNull
     private String name;
 
     @Getter
     @Setter
+    @NotNull
     private byte[] data;
 
     public AssetDto extractDto() {
@@ -32,5 +35,11 @@ public class Asset {
             dto.setData(null);
         }
         return dto;
+    }
+
+    public void validate() {
+        if (data == null) {
+            data = new byte[0];
+        }
     }
 }

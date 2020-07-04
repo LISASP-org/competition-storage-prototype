@@ -24,6 +24,7 @@ public class Competitions {
     public String apply(RegisterCompetition command) {
         Competition competition = new Competition();
         competition.apply(command);
+        competition.validate();
         repository.save(competition);
         return competition.getId();
     }
@@ -31,44 +32,51 @@ public class Competitions {
     public void apply(UpdateCompetition command) {
         Competition competition = get(command.getId());
         competition.apply(command);
+        competition.validate();
         repository.save(competition);
     }
 
     public void apply(AcceptCompetition command) {
         Competition competition = get(command.getId());
         competition.apply(command);
+        competition.validate();
         repository.save(competition);
     }
 
     public void apply(RevokeCompetition command) {
         Competition competition = get(command.getId());
         competition.apply(command);
+        competition.validate();
         repository.save(competition);
     }
 
     public void apply(ReopenCompetition command) {
         Competition competition = get(command.getId());
         competition.apply(command);
+        competition.validate();
         repository.save(competition);
     }
 
     public void apply(FinalizeCompetition command) {
         Competition competition = get(command.getId());
         competition.apply(command);
+        competition.validate();
         repository.save(competition);
     }
 
     public String apply(AddAsset addAsset) {
-        Competition c = get(addAsset.getId());
-        String assetId = c.apply(addAsset);
-        repository.save(c);
+        Competition competition = get(addAsset.getId());
+        String assetId = competition.apply(addAsset);
+        competition.validate();
+        repository.save(competition);
         return assetId;
     }
 
     public String apply(UpdateAsset addAsset) {
-        Competition c = get(addAsset.getId());
-        String assetId = c.apply(addAsset);
-        repository.save(c);
+        Competition competition = get(addAsset.getId());
+        String assetId = competition.apply(addAsset);
+        competition.validate();
+        repository.save(competition);
         return assetId;
     }
 
@@ -120,7 +128,7 @@ public class Competitions {
         return repository.findAll().stream().map(c -> c.extractDto()).collect(Collectors.toList());
     }
 
-    public Optional<AssetDto> findAsset(String competitionId, String assetId) {
+    public AssetDto findAsset(String competitionId, String assetId) {
         Competition c = get(competitionId);
         return c.getAssetDto(assetId);
     }

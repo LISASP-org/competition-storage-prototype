@@ -10,11 +10,12 @@ import org.lisasp.competitionstorage.logic.exception.AssetNotFoundException;
 import org.lisasp.competitionstorage.logic.exception.CompetitionAlreadyExistsException;
 import org.springframework.data.annotation.Id;
 
+import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Competition {
@@ -67,11 +68,11 @@ public class Competition {
 
     @Getter
     @Setter
-    private List<Asset> assets = new ArrayList<>();
+    private Map<String, Asset> assets = new HashMap<>();
 
     @Getter
     @Setter
-    private List<Result> results = new ArrayList<>();
+    private Map<String, Result> results = new HashMap<>();
 
     public Competition() {
     }
@@ -107,7 +108,7 @@ public class Competition {
         asset.setId(ids.generate());
         asset.setName(addAsset.getName());
         asset.setData(addAsset.getData());
-        assets.add(asset);
+        assets.put(asset.getId(), asset);
         return asset.getId();
     }
 
@@ -115,7 +116,7 @@ public class Competition {
         Asset asset = getAsset(updateAsset.getAssetId());
         asset.setName(updateAsset.getName());
         asset.setData(updateAsset.getData());
-        assets.add(asset);
+        assets.put(updateAsset.getAssetId(), asset);
         return asset.getId();
     }
 
@@ -142,10 +143,10 @@ public class Competition {
     private void initialize() {
         id = ids.generate();
         if (assets == null) {
-            assets = new ArrayList<>();
+            assets = new HashMap<>();
         }
         if (results == null) {
-            results = new ArrayList<>();
+            results = new HashMap<>();
         }
     }
 
@@ -162,22 +163,34 @@ public class Competition {
     }
 
     private Asset getAsset(String assetId) {
-        Optional<Asset> asset = assets.stream().filter(a -> a.getId().equals(assetId)).findFirst();
-        if (asset.isEmpty()) {
+        Asset asset = assets.get(assetId);
+        if (asset == null) {
             throw new AssetNotFoundException(getId(), assetId);
         }
-        return asset.get();
+        return asset;
     }
 
-    public Optional<AssetDto> getAssetDto(String assetId) {
-        return assets.stream().filter(a -> a.getId().equals(assetId)).map(a -> a.extractDto()).findFirst();
+    public AssetDto getAssetDto(String assetId) {
+        return getAsset(assetId).extractDto();
     }
 
     public List<AssetDto> getAssetDtos() {
-        return assets.stream().map(a -> a.extractDto()).collect(Collectors.toList());
+        return assets.values().stream().map(a -> a.extractDto()).collect(Collectors.toList());
     }
 
     public void apply(RemoveAsset removeAsset) {
-        assets.removeIf(a -> a.getId().equals(removeAsset.getAssetId()));
+        assets.remove(removeAsset.getAssetId());
+    }
+
+    public void validate() {
+        if (id == null || id.trim().isEmpty()) {
+            throw new ValidationException("id must not be null");
+        }
+        for (Asset asset : assets.values()) {
+            asset.validate();
+        }
+        for (Result result : results.values()) {
+            result.validate();
+        }
     }
 }

@@ -9,9 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
-@RestController
+@RestController()
+@RequestMapping("/competitions")
 public class CompetitionController {
 
     private final Competitions competitions;
@@ -21,7 +25,7 @@ public class CompetitionController {
         this.competitions = competitions;
     }
 
-    @GetMapping("/competitions")
+    @GetMapping("")
     List<CompetitionDto> find(@RequestParam(name = "name", required = false, defaultValue = "") String name) {
         if ("".equals(name)) {
             return competitions.findAll();
@@ -29,77 +33,77 @@ public class CompetitionController {
         return competitions.findByName(name);
     }
 
-    @GetMapping("/competitions/{id}")
+    @GetMapping("/{id}")
     CompetitionDto findById(@PathVariable String id) {
         return competitions.find(id);
     }
 
-    @PostMapping("/competitions")
+    @PostMapping("")
     CompetitionDto register(@RequestBody CompetitionDto competition) {
         String id = competitions.apply(new RegisterCompetition(competition));
         return competitions.find(id);
     }
 
-    @PostMapping("/competitions/{id}/assets/")
+    @PostMapping("/{id}/assets")
     AssetDto addAsset(@RequestBody AssetDto asset, @PathVariable String id) {
         String assetId = competitions.apply(new AddAsset(id, asset));
-        return competitions.findAsset(id, assetId).get();
+        return competitions.findAsset(id, assetId);
     }
 
-    @PutMapping("/competitions/{id}/assets/{assetId}")
+    @PutMapping("/{id}/assets/{assetId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     void updateAsset(@RequestBody AssetDto asset, @PathVariable String id, @PathVariable String assetId) {
         competitions.apply(new UpdateAsset(id, asset));
     }
 
-    @DeleteMapping("/competitions/{id}/assets/{assetId}")
+    @DeleteMapping("/{id}/assets/{assetId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     void deleteAsset(@PathVariable String id, @PathVariable String assetId) {
         competitions.removeAsset(new RemoveAsset(id, assetId));
     }
 
-    @GetMapping("/competitions/{id}/assets/")
+    @GetMapping("/{id}/assets")
     List<AssetDto> findAssets(@PathVariable String id) {
         return competitions.findAssets(id);
     }
 
-    @GetMapping("/competitions/{id}/assets/{assetId}")
+    @GetMapping("/{id}/assets/{assetId}")
     AssetDto findAssets(@PathVariable String id, @PathVariable String assetId) {
-        return competitions.findAsset(id, assetId).get();
+        return competitions.findAsset(id, assetId);
     }
 
-    @PostMapping("/competitions/{id}/accept")
+    @PostMapping("/{id}/accept")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     void accept(@PathVariable String id) {
         competitions.apply(new AcceptCompetition(id));
     }
 
-    @PostMapping("/competitions/{id}/finalize")
+    @PostMapping("/{id}/finalize")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     void finalize(@PathVariable String id) {
         competitions.apply(new FinalizeCompetition(id));
     }
 
-    @PostMapping("/competitions/{id}/reopen")
+    @PostMapping("/{id}/reopen")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     void reopen(@PathVariable String id) {
         competitions.apply(new ReopenCompetition(id));
     }
 
-    @PostMapping("/competitions/{id}/revoke")
+    @PostMapping("/{id}/revoke")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     void revoke(@PathVariable String id) {
         competitions.apply(new RevokeCompetition(id));
     }
 
-    @PutMapping("/competitions/{id}")
+    @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     void update(@RequestBody CompetitionDto competition, @PathVariable String id) {
         checkValidityOfIds(competition.getId(), id);
         competitions.apply(new UpdateCompetition(competition));
     }
 
-    @DeleteMapping("/competitions/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     void delete(@PathVariable String id) {
         competitions.delete(id);
