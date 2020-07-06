@@ -23,14 +23,6 @@ public class Result {
     @Setter
     private byte[] data;
 
-    public ResultDto extractDto() {
-        ResultDto dto = new ResultDto();
-        dto.setId(id);
-        dto.setName(name);
-        dto.setData(Arrays.copyOf(data, data.length));
-        return dto;
-    }
-
     public void validate() {
     }
 }

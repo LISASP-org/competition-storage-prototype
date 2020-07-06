@@ -1,17 +1,17 @@
 package org.lisasp.competitionstorage.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Value;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
-public class AssetDto extends DtoBase {
-    @Getter
-    @Setter
-    @NotNull
+@Value
+public class AssetDto {
+
+    @NotBlank
+    private String id;
+
+    @NotBlank
     private String name;
 
-    @Getter
-    @Setter
     private byte[] data;
 }

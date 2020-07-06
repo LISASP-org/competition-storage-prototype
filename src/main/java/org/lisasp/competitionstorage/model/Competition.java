@@ -1,16 +1,18 @@
 package org.lisasp.competitionstorage.model;
 
 import lombok.Getter;
-import lombok.Setter;
+import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.eventsourcing.EventSourcingHandler;
+import org.axonframework.modelling.command.AggregateIdentifier;
+import org.axonframework.modelling.command.AggregateLifecycle;
+import org.axonframework.spring.stereotype.Aggregate;
 import org.lisasp.competitionstorage.dto.AssetDto;
 import org.lisasp.competitionstorage.dto.CompetitionDto;
-import org.lisasp.competitionstorage.logic.exception.IdMissingException;
-import org.lisasp.competitionstorage.logic.exception.IdsNotValidException;
-import org.lisasp.competitionstorage.model.util.IdGenerator;
 import org.lisasp.competitionstorage.logic.command.*;
-import org.lisasp.competitionstorage.logic.exception.AssetNotFoundException;
-import org.lisasp.competitionstorage.logic.exception.CompetitionAlreadyExistsException;
-import org.springframework.data.annotation.Id;
+import org.lisasp.competitionstorage.logic.event.*;
+import org.lisasp.competitionstorage.logic.exception.*;
+import org.lisasp.competitionstorage.model.util.CompetitionStatus;
+import org.springframework.context.annotation.Profile;
 
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
@@ -20,106 +22,113 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Aggregate
+@Profile("command")
 public class Competition {
 
-    private static final IdGenerator ids = new IdGenerator();
-
-    @Id
+    @AggregateIdentifier
     @Getter
-    @Setter
     private String id;
 
     @Getter
-    @Setter
+    private CompetitionStatus status = CompetitionStatus.Open;
+
+    @Getter
     @NotNull
     private String name;
 
     @Getter
-    @Setter
     @NotNull
     private String shortName;
 
     @Getter
-    @Setter
     @NotNull
     private LocalDate startDate;
 
     @Getter
-    @Setter
-    @NotNull
     private LocalDate endDate;
 
     @Getter
-    @Setter
-    @NotNull
     private String location;
 
     @Getter
-    @Setter
-    @NotNull
     private String country;
 
     @Getter
-    @Setter
-    @NotNull
     private String organization;
 
     @Getter
-    @Setter
     private String description;
 
-    @Getter
-    @Setter
     private Map<String, Asset> assets = new HashMap<>();
 
-    @Getter
-    @Setter
     private Map<String, Result> results = new HashMap<>();
 
     public Competition() {
     }
 
-    public void apply(RegisterCompetition command) {
+    @CommandHandler
+    public Competition(RegisterCompetition command) {
         assertNew();
-        importData(command.getData());
+        AggregateLifecycle.apply(new CompetitionRegistered(command.getId(), command.getShortName()));
+    }
+
+    @EventSourcingHandler
+    public void on(CompetitionRegistered event) {
         initialize();
+        this.id = event.getId();
+        this.shortName = event.getShortName();
     }
 
-    public void apply(UpdateCompetitionProperties command) {
+    @CommandHandler
+    public void handle(UpdateCompetitionProperties command) {
         assertId(command.getId());
-        importData(command.getData());
+        assertOpen();
+        AggregateLifecycle.apply(new CompetitionPropertiesUpdated(command.getId(), command.getName(), command.getStartDate(), command.getEndDate(), command.getLocation(), command.getCountry(), command.getOrganization(), command.getDescription()));
     }
 
-    public void apply(AcceptCompetition command) {
-        // Todo: Not yet implemented
+    @EventSourcingHandler
+    public void on(CompetitionPropertiesUpdated event) {
+        name = event.getName();
+        startDate = event.getStartDate();
+        endDate = event.getEndDate();
+        location = event.getLocation();
+        country = event.getCountry();
+        organization = event.getOrganization();
+        description = event.getDescription();
     }
 
-    public void apply(FinalizeCompetition command) {
-        // Todo: Not yet implemented
+    @CommandHandler
+    public void apply(AddAsset command) {
+        AggregateLifecycle.apply(new AssetAdded(command.getId(), command.getAssetId(), command.getFilename(), command.getData()));
     }
 
-    public void apply(RevokeCompetition command) {
-        // Todo: Not yet implemented
+    @EventSourcingHandler
+    public void on(AssetAdded event) {
+        assets.put(event.getAssetId(), new Asset(event));
     }
 
-    public void apply(ReopenCompetition command) {
-        // Todo: Not yet implemented
+    @CommandHandler
+    public void apply(UpdateAsset command) {
+        assertAssetExists(command.getAssetId());
+        AggregateLifecycle.apply(new AssetUpdated(command.getId(), command.getAssetId(), command.getData()));
     }
 
-    public String apply(AddAsset addAsset) {
-        Asset asset = new Asset();
-        asset.setId(ids.generate());
-        asset.setName(addAsset.getName());
-        asset.setData(addAsset.getData());
-        assets.put(asset.getId(), asset);
-        return asset.getId();
+    @EventSourcingHandler
+    public void on(AssetUpdated event) {
+        getAsset(event.getAssetId()).on(event);
     }
 
-    public void apply(UpdateAsset updateAsset) {
-        Asset asset = getAsset(updateAsset.getAssetId());
-        asset.setName(updateAsset.getName());
-        asset.setData(updateAsset.getData());
-        assets.put(updateAsset.getAssetId(), asset);
+    @CommandHandler
+    public void apply(RemoveAsset command) {
+        if (assets.containsKey(command.getAssetId())) {
+            AggregateLifecycle.apply(new AssetRemoved(command.getId(), command.getAssetId()));
+        }
+    }
+
+    @EventSourcingHandler
+    public void on(AssetRemoved event) {
+        assets.remove(event.getAssetId());
     }
 
     private void assertNew() {
@@ -137,22 +146,19 @@ public class Competition {
         }
     }
 
-    public CompetitionDto extractDto() {
-        CompetitionDto dto = new CompetitionDto();
-        dto.setId(id);
-        dto.setName(name);
-        dto.setShortName(shortName);
-        dto.setStartDate(startDate);
-        dto.setEndDate(endDate);
-        dto.setLocation(location);
-        dto.setCountry(country);
-        dto.setOrganization(organization);
-        dto.setDescription(description);
-        return dto;
+    private void assertOpen() {
+        if (status != CompetitionStatus.Open) {
+            throw new CompetitionStatusException(CompetitionStatus.Open, status);
+        }
+    }
+
+    private void assertAssetExists(String assetId) {
+        if (!assets.containsKey(assetId)) {
+            throw new AssetNotFoundException(this.id, assetId);
+        }
     }
 
     private void initialize() {
-        id = ids.generate();
         if (assets == null) {
             assets = new HashMap<>();
         }
@@ -161,47 +167,11 @@ public class Competition {
         }
     }
 
-    private void importData(CompetitionDto dto) {
-        id = dto.getId();
-        name = dto.getName();
-        shortName = dto.getShortName();
-        startDate = dto.getStartDate();
-        endDate = dto.getEndDate();
-        location = dto.getLocation();
-        country = dto.getCountry();
-        organization = dto.getOrganization();
-        description = dto.getDescription();
-    }
-
     private Asset getAsset(String assetId) {
         Asset asset = assets.get(assetId);
         if (asset == null) {
             throw new AssetNotFoundException(getId(), assetId);
         }
         return asset;
-    }
-
-    public AssetDto getAssetDto(String assetId) {
-        return getAsset(assetId).extractDto();
-    }
-
-    public List<AssetDto> getAssetDtos() {
-        return assets.values().stream().map(a -> a.extractDto()).collect(Collectors.toList());
-    }
-
-    public void apply(RemoveAsset removeAsset) {
-        assets.remove(removeAsset.getAssetId());
-    }
-
-    public void validate() {
-        if (id == null || id.trim().isEmpty()) {
-            throw new ValidationException("id must not be null");
-        }
-        for (Asset asset : assets.values()) {
-            asset.validate();
-        }
-        for (Result result : results.values()) {
-            result.validate();
-        }
     }
 }

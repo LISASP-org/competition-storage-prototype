@@ -1,48 +1,42 @@
 package org.lisasp.competitionstorage.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Value;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-public class CompetitionDto extends DtoBase {
-    @Getter
-    @Setter
-    @NotNull
+@Value
+public class CompetitionDto {
+
+    @NotBlank
+    @Min(16)
+    private String id;
+
+    @NotBlank
+    @Min(8)
+    @Max(100)
     private String name;
 
-    @Getter
-    @Setter
     @NotNull
     private String shortName;
 
-    @Getter
-    @Setter
     @NotNull
     private LocalDate startDate;
 
-    @Getter
-    @Setter
     @NotNull
     private LocalDate endDate;
 
-    @Getter
-    @Setter
     @NotNull
     private String location;
 
-    @Getter
-    @Setter
-    @NotNull
+    @NotBlank
     private String country;
 
-    @Getter
-    @Setter
-    @NotNull
+    @NotBlank
     private String organization;
 
-    @Getter
-    @Setter
     private String description;
 }
