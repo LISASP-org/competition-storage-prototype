@@ -18,6 +18,5 @@ data class CompetitionFinalized(val id: String)
 data class CompetitionReopened(val id: String)
 data class CompetitionRevoked(val id: String)
 
-data class AttachmentAdded(val id: String, val attachmentId: String, val filename: String, val data: ByteArray)
-data class AttachmentUpdated(val id: String, val attachmentId: String, val data: ByteArray)
-data class AttachmentRemoved(val id: String, val attachmentId: String)
+data class AttachmentAdded(val id: String, val filename: String)
+data class AttachmentRemoved(val id: String, val filename: String)

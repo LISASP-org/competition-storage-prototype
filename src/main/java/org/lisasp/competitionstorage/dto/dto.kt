@@ -18,7 +18,7 @@ data class UpdateCompetitionDto(@TargetAggregateIdentifier @NotBlank @Min(16) va
                                        @NotBlank val organization: String,
                                        val description: String)
 
-data class AddAttachmentDto(@NotBlank val filename: String, @NotNull val data: ByteArray)
+data class AddAttachmentDto(@NotBlank val filename: String)
 data class UpdateAttachmentDto(@NotNull val data: ByteArray)
 
 data class IdDto(@NotBlank @Min(16) val id: String)

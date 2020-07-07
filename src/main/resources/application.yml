@@ -18,6 +18,10 @@ spring:
   jpa:
     generate-ddl: true
 
+axon:
+  serializer:
+    events: jackson
+
 springdoc:
   api-docs:
     path: '/api-docs'

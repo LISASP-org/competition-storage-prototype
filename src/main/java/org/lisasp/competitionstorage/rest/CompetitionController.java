@@ -59,25 +59,6 @@ public class CompetitionController {
         return new IdDto(id);
     }
 
-    @PostMapping("/{id}/attachments")
-    IdDto addAttachment(@RequestBody AddAttachmentDto attachment, @PathVariable String id) {
-        String attachmentId = identifierFactory.generateIdentifier();
-        commandGateway.send(new AddAttachment(id, attachmentId, attachment.getFilename(), attachment.getData()));
-        return new IdDto(attachmentId);
-    }
-
-    @PutMapping("/{id}/attachments/{attachmentId}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    void updateAttachment(@RequestBody UpdateAttachmentDto attachment, @PathVariable String id, @PathVariable String attachmentId) {
-        commandGateway.send(new UpdateAttachment(id, attachmentId, attachment.getData()));
-    }
-
-    @DeleteMapping("/{id}/attachments/{attachmentId}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    void deleteAttachment(@PathVariable String id, @PathVariable String attachmentId) {
-        commandGateway.send(new RemoveAttachment(id, attachmentId));
-    }
-
     @PostMapping("/{id}/accept")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     void accept(@PathVariable String id) {
@@ -96,23 +77,35 @@ public class CompetitionController {
         commandGateway.send(new ReopenCompetition(id));
     }
 
-    @PostMapping("/{id}/revoke")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    void revoke(@PathVariable String id) {
-        commandGateway.send(new RevokeCompetition(id));
-    }
-
     @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     void update(@RequestBody CompetitionDto competition, @PathVariable String id) {
-        checkValidityOfIds(competition.getId(), id);
         commandGateway.send(new UpdateCompetitionProperties(id, competition.getName(), competition.getStartDate(), competition.getEndDate(), competition.getLocation(), competition.getCountry(), competition.getOrganization(), competition.getDescription()));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     void delete(@PathVariable String id) {
-        // Not possible...
+        commandGateway.send(new RevokeCompetition(id));
+    }
+
+    @PostMapping("/{id}/attachments")
+    IdDto addAttachment(@RequestBody AddAttachmentDto attachment, @PathVariable String id) {
+        String attachmentId = identifierFactory.generateIdentifier();
+        commandGateway.send(new AddAttachment(id, attachment.getFilename()));
+        return new IdDto(attachmentId);
+    }
+
+    @PutMapping("/{id}/attachments/{attachmentId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    void updateAttachment(@RequestBody UpdateAttachmentDto attachment, @PathVariable String id, @PathVariable String attachmentId) {
+        // commandGateway.send(new UpdateAttachment(id, attachmentId, attachment.getData()));
+    }
+
+    @DeleteMapping("/{id}/attachments/{attachmentId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    void deleteAttachment(@PathVariable String id, @PathVariable String attachmentId) {
+        commandGateway.send(new RemoveAttachment(id, attachmentId));
     }
 
     private void checkValidityOfIds(String id1, String id2) {

@@ -4,7 +4,6 @@ import org.lisasp.competitionstorage.dto.AttachmentDto;
 import org.lisasp.competitionstorage.dto.CompetitionDto;
 import org.lisasp.competitionstorage.logic.Competitions;
 import org.lisasp.competitionstorage.logic.exception.AttachmentNotFoundException;
-import org.lisasp.competitionstorage.model.Attachment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

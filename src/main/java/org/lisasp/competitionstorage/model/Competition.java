@@ -14,7 +14,9 @@ import org.lisasp.competitionstorage.model.util.CompetitionStatus;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Aggregate
 public class Competition {
@@ -53,7 +55,7 @@ public class Competition {
     @Getter
     private String description;
 
-    private Map<String, Attachment> attachments = new HashMap<>();
+    private Set<String> attachments = new HashSet<>();
 
     private Map<String, Result> results = new HashMap<>();
 
@@ -68,7 +70,6 @@ public class Competition {
 
     @EventSourcingHandler
     public void on(CompetitionRegistered event) {
-        initialize();
         this.id = event.getId();
         this.shortName = event.getShortName();
     }
@@ -93,35 +94,24 @@ public class Competition {
 
     @CommandHandler
     public void apply(AddAttachment command) {
-        AggregateLifecycle.apply(new AttachmentAdded(command.getId(), command.getAttachmentId(), command.getFilename(), command.getData()));
+        AggregateLifecycle.apply(new AttachmentAdded(command.getId(), command.getFilename()));
     }
 
     @EventSourcingHandler
     public void on(AttachmentAdded event) {
-        attachments.put(event.getAttachmentId(), new Attachment(event));
-    }
-
-    @CommandHandler
-    public void apply(UpdateAttachment command) {
-        assertAttachmentExists(command.getAttachmentId());
-        AggregateLifecycle.apply(new AttachmentUpdated(command.getId(), command.getAttachmentId(), command.getData()));
-    }
-
-    @EventSourcingHandler
-    public void on(AttachmentUpdated event) {
-        getAttachment(event.getAttachmentId()).on(event);
+        attachments.add(event.getFilename());
     }
 
     @CommandHandler
     public void apply(RemoveAttachment command) {
-        if (attachments.containsKey(command.getAttachmentId())) {
-            AggregateLifecycle.apply(new AttachmentRemoved(command.getId(), command.getAttachmentId()));
+        if (attachments.contains(command.getFilename())) {
+            AggregateLifecycle.apply(new AttachmentRemoved(command.getId(), command.getFilename()));
         }
     }
 
     @EventSourcingHandler
     public void on(AttachmentRemoved event) {
-        attachments.remove(event.getAttachmentId());
+        attachments.remove(event.getFilename());
     }
 
     private void assertNew() {
@@ -143,28 +133,5 @@ public class Competition {
         if (status != CompetitionStatus.Open) {
             throw new CompetitionStatusException(CompetitionStatus.Open, status);
         }
-    }
-
-    private void assertAttachmentExists(String attachmentId) {
-        if (!attachments.containsKey(attachmentId)) {
-            throw new AttachmentNotFoundException(this.id, attachmentId);
-        }
-    }
-
-    private void initialize() {
-        if (attachments == null) {
-            attachments = new HashMap<>();
-        }
-        if (results == null) {
-            results = new HashMap<>();
-        }
-    }
-
-    private Attachment getAttachment(String attachmentId) {
-        Attachment attachment = attachments.get(attachmentId);
-        if (attachment == null) {
-            throw new AttachmentNotFoundException(getId(), attachmentId);
-        }
-        return attachment;
     }
 }

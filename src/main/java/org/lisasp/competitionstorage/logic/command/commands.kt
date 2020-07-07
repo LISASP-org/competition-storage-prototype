@@ -1,6 +1,5 @@
 package org.lisasp.competitionstorage.logic.command
 
-import lombok.EqualsAndHashCode
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import java.time.LocalDate
 import javax.validation.constraints.Max
@@ -25,12 +24,7 @@ data class FinalizeCompetition(@TargetAggregateIdentifier @NotBlank @Min(16) val
 data class ReopenCompetition(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String)
 data class RevokeCompetition(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String)
 
-@EqualsAndHashCode
-data class AddAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank @Min(16) val attachmentId:String, @NotBlank val filename: String, val data: ByteArray)
+data class AddAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank val filename: String)
 
-@EqualsAndHashCode
-data class UpdateAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank @Min(16) val attachmentId: String, val data: ByteArray)
-
-@EqualsAndHashCode
-data class RemoveAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank @Min(16) val attachmentId:String)
+data class RemoveAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank @Min(8) val filename: String)
 
