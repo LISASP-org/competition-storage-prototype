@@ -14,13 +14,14 @@ import org.springframework.stereotype.Component;
 @Profile("command")
 public class CompetitionCommandConfiguration {
 
+    /*
     @Bean
     public Repository<Competition> createCompetitionRepository(EventStore eventStore, Cache cache) {
         return EventSourcingRepository.builder(Competition.class)
                 .cache(cache)
                 .eventStore(eventStore)
                 .build();
-    }
+    }*/
 
     @Bean
     public Cache cache() {

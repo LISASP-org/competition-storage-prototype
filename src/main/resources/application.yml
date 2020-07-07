@@ -10,7 +10,6 @@ spring:
       port: 27017
       host: localhost
 
-
   main:
     allow-bean-definition-overriding: true
   error:

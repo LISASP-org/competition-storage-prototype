@@ -6,24 +6,17 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
-import org.lisasp.competitionstorage.dto.AssetDto;
-import org.lisasp.competitionstorage.dto.CompetitionDto;
 import org.lisasp.competitionstorage.logic.command.*;
 import org.lisasp.competitionstorage.logic.event.*;
 import org.lisasp.competitionstorage.logic.exception.*;
 import org.lisasp.competitionstorage.model.util.CompetitionStatus;
-import org.springframework.context.annotation.Profile;
 
-import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Aggregate
-@Profile("command")
 public class Competition {
 
     @AggregateIdentifier

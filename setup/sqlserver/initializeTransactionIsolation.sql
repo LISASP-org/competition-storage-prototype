@@ -1,0 +1,8 @@
+USE master;
+GO
+
+ALTER DATABASE [competition-storage] SET ALLOW_SNAPSHOT_ISOLATION ON;
+GO
+  
+ALTER DATABASE [competition-storage] SET READ_COMMITTED_SNAPSHOT ON;
+GO

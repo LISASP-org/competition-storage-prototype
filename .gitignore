@@ -36,5 +36,5 @@ HELP.md
 mvnw
 mvnw.cmd
 
-# Spring
-src/main/resources/application-*.yml
+# data
+/database/
