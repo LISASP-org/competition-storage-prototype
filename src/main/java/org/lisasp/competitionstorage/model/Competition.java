@@ -53,7 +53,7 @@ public class Competition {
     @Getter
     private String description;
 
-    private Map<String, Asset> assets = new HashMap<>();
+    private Map<String, Attachment> attachments = new HashMap<>();
 
     private Map<String, Result> results = new HashMap<>();
 
@@ -92,36 +92,36 @@ public class Competition {
     }
 
     @CommandHandler
-    public void apply(AddAsset command) {
-        AggregateLifecycle.apply(new AssetAdded(command.getId(), command.getAssetId(), command.getFilename(), command.getData()));
+    public void apply(AddAttachment command) {
+        AggregateLifecycle.apply(new AttachmentAdded(command.getId(), command.getAttachmentId(), command.getFilename(), command.getData()));
     }
 
     @EventSourcingHandler
-    public void on(AssetAdded event) {
-        assets.put(event.getAssetId(), new Asset(event));
+    public void on(AttachmentAdded event) {
+        attachments.put(event.getAttachmentId(), new Attachment(event));
     }
 
     @CommandHandler
-    public void apply(UpdateAsset command) {
-        assertAssetExists(command.getAssetId());
-        AggregateLifecycle.apply(new AssetUpdated(command.getId(), command.getAssetId(), command.getData()));
+    public void apply(UpdateAttachment command) {
+        assertAttachmentExists(command.getAttachmentId());
+        AggregateLifecycle.apply(new AttachmentUpdated(command.getId(), command.getAttachmentId(), command.getData()));
     }
 
     @EventSourcingHandler
-    public void on(AssetUpdated event) {
-        getAsset(event.getAssetId()).on(event);
+    public void on(AttachmentUpdated event) {
+        getAttachment(event.getAttachmentId()).on(event);
     }
 
     @CommandHandler
-    public void apply(RemoveAsset command) {
-        if (assets.containsKey(command.getAssetId())) {
-            AggregateLifecycle.apply(new AssetRemoved(command.getId(), command.getAssetId()));
+    public void apply(RemoveAttachment command) {
+        if (attachments.containsKey(command.getAttachmentId())) {
+            AggregateLifecycle.apply(new AttachmentRemoved(command.getId(), command.getAttachmentId()));
         }
     }
 
     @EventSourcingHandler
-    public void on(AssetRemoved event) {
-        assets.remove(event.getAssetId());
+    public void on(AttachmentRemoved event) {
+        attachments.remove(event.getAttachmentId());
     }
 
     private void assertNew() {
@@ -145,26 +145,26 @@ public class Competition {
         }
     }
 
-    private void assertAssetExists(String assetId) {
-        if (!assets.containsKey(assetId)) {
-            throw new AssetNotFoundException(this.id, assetId);
+    private void assertAttachmentExists(String attachmentId) {
+        if (!attachments.containsKey(attachmentId)) {
+            throw new AttachmentNotFoundException(this.id, attachmentId);
         }
     }
 
     private void initialize() {
-        if (assets == null) {
-            assets = new HashMap<>();
+        if (attachments == null) {
+            attachments = new HashMap<>();
         }
         if (results == null) {
             results = new HashMap<>();
         }
     }
 
-    private Asset getAsset(String assetId) {
-        Asset asset = assets.get(assetId);
-        if (asset == null) {
-            throw new AssetNotFoundException(getId(), assetId);
+    private Attachment getAttachment(String attachmentId) {
+        Attachment attachment = attachments.get(attachmentId);
+        if (attachment == null) {
+            throw new AttachmentNotFoundException(getId(), attachmentId);
         }
-        return asset;
+        return attachment;
     }
 }

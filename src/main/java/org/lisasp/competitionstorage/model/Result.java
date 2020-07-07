@@ -2,7 +2,7 @@ package org.lisasp.competitionstorage.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.lisasp.competitionstorage.dto.AssetDto;
+import org.lisasp.competitionstorage.dto.AttachmentDto;
 import org.lisasp.competitionstorage.dto.ResultDto;
 import org.springframework.data.annotation.Id;
 

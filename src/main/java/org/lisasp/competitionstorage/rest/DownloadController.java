@@ -1,10 +1,10 @@
 package org.lisasp.competitionstorage.rest;
 
-import org.lisasp.competitionstorage.dto.AssetDto;
+import org.lisasp.competitionstorage.dto.AttachmentDto;
 import org.lisasp.competitionstorage.dto.CompetitionDto;
 import org.lisasp.competitionstorage.logic.Competitions;
-import org.lisasp.competitionstorage.logic.exception.AssetNotFoundException;
-import org.lisasp.competitionstorage.model.Asset;
+import org.lisasp.competitionstorage.logic.exception.AttachmentNotFoundException;
+import org.lisasp.competitionstorage.model.Attachment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +29,12 @@ public class DownloadController {
         return competitions.findByName(name);
     }
 
-    @GetMapping("/{id}/assets/{assetId}/{name}")
-    byte[] findAssets(@PathVariable String id, @PathVariable String assetId, @PathVariable String name) {
-        AssetDto asset = competitions.findAsset(id, assetId);
-        if (!asset.getName().equalsIgnoreCase(name.trim())) {
-            throw new AssetNotFoundException(id, assetId, name);
+    @GetMapping("/{id}/attachments/{attachmentId}/{name}")
+    byte[] findAttachments(@PathVariable String id, @PathVariable String attachmentId, @PathVariable String name) {
+        AttachmentDto attachment = competitions.findAttachment(id, attachmentId);
+        if (!attachment.getName().equalsIgnoreCase(name.trim())) {
+            throw new AttachmentNotFoundException(id, attachmentId, name);
         }
-        return asset.getData();
+        return attachment.getData();
     }
 }

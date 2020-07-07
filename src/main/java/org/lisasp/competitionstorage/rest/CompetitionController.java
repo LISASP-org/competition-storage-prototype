@@ -41,14 +41,14 @@ public class CompetitionController {
         return competitions.find(id);
     }
 
-    @GetMapping("/{id}/assets")
-    List<AssetDto> findAssets(@PathVariable String id) {
-        return competitions.findAssets(id);
+    @GetMapping("/{id}/attachments")
+    List<AttachmentDto> findAttachments(@PathVariable String id) {
+        return competitions.findAttachments(id);
     }
 
-    @GetMapping("/{id}/assets/{assetId}")
-    AssetDto findAssets(@PathVariable String id, @PathVariable String assetId) {
-        return competitions.findAsset(id, assetId);
+    @GetMapping("/{id}/attachments/{attachmentId}")
+    AttachmentDto findAttachments(@PathVariable String id, @PathVariable String attachmentId) {
+        return competitions.findAttachment(id, attachmentId);
     }
 
 
@@ -59,23 +59,23 @@ public class CompetitionController {
         return new IdDto(id);
     }
 
-    @PostMapping("/{id}/assets")
-    IdDto addAsset(@RequestBody AddAssetDto asset, @PathVariable String id) {
-        String assetId = identifierFactory.generateIdentifier();
-        commandGateway.send(new AddAsset(id, assetId, asset.getFilename(), asset.getData()));
-        return new IdDto(assetId);
+    @PostMapping("/{id}/attachments")
+    IdDto addAttachment(@RequestBody AddAttachmentDto attachment, @PathVariable String id) {
+        String attachmentId = identifierFactory.generateIdentifier();
+        commandGateway.send(new AddAttachment(id, attachmentId, attachment.getFilename(), attachment.getData()));
+        return new IdDto(attachmentId);
     }
 
-    @PutMapping("/{id}/assets/{assetId}")
+    @PutMapping("/{id}/attachments/{attachmentId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    void updateAsset(@RequestBody UpdateAssetDto asset, @PathVariable String id, @PathVariable String assetId) {
-        commandGateway.send(new UpdateAsset(id, assetId, asset.getData()));
+    void updateAttachment(@RequestBody UpdateAttachmentDto attachment, @PathVariable String id, @PathVariable String attachmentId) {
+        commandGateway.send(new UpdateAttachment(id, attachmentId, attachment.getData()));
     }
 
-    @DeleteMapping("/{id}/assets/{assetId}")
+    @DeleteMapping("/{id}/attachments/{attachmentId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    void deleteAsset(@PathVariable String id, @PathVariable String assetId) {
-        commandGateway.send(new RemoveAsset(id, assetId));
+    void deleteAttachment(@PathVariable String id, @PathVariable String attachmentId) {
+        commandGateway.send(new RemoveAttachment(id, attachmentId));
     }
 
     @PostMapping("/{id}/accept")

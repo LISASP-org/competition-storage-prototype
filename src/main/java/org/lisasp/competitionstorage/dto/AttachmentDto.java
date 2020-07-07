@@ -5,7 +5,7 @@ import lombok.Value;
 import javax.validation.constraints.NotBlank;
 
 @Value
-public class AssetDto {
+public class AttachmentDto {
 
     @NotBlank
     private String id;

@@ -16,8 +16,8 @@ public class ExceptionHandlerAdvice {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(AssetNotFoundException.class)
-    String assetNotFoundHandler(AssetNotFoundException ex) {
+    @ExceptionHandler(AttachmentNotFoundException.class)
+    String attachmentNotFoundHandler(AttachmentNotFoundException ex) {
         return ex.getMessage();
     }
 

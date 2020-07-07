@@ -1,5 +1,5 @@
 # competition-storage-prototype
-Stores competitions with their results and additional assets.
+Stores competitions with their results and additional attachments.
 
 ## Setup
 

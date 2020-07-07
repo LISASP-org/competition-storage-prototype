@@ -12,7 +12,7 @@
 	<artifactId>competition-storage</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Competition Storage</name>
-	<description>Stores competitions with their results and additional assets</description>
+	<description>Stores competitions with their results and additional attachments</description>
 
 	<properties>
 		<java.version>11</java.version>

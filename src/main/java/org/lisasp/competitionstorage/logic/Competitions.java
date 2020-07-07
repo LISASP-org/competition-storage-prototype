@@ -1,6 +1,6 @@
 package org.lisasp.competitionstorage.logic;
 
-import org.lisasp.competitionstorage.dto.AssetDto;
+import org.lisasp.competitionstorage.dto.AttachmentDto;
 import org.lisasp.competitionstorage.dto.CompetitionDto;
 import org.springframework.stereotype.Component;
 
@@ -22,11 +22,11 @@ public class Competitions {
         return new ArrayList<>();
     }
 
-    public AssetDto findAsset(String competitionId, String assetId) {
+    public AttachmentDto findAttachment(String competitionId, String attachmentId) {
         return null;
     }
 
-    public List<AssetDto> findAssets(String id) {
+    public List<AttachmentDto> findAttachments(String id) {
         return new ArrayList<>();
     }
 }

@@ -26,11 +26,11 @@ data class ReopenCompetition(@TargetAggregateIdentifier @NotBlank @Min(16) val i
 data class RevokeCompetition(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String)
 
 @EqualsAndHashCode
-data class AddAsset(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank @Min(16) val assetId:String, @NotBlank val filename: String, val data: ByteArray)
+data class AddAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank @Min(16) val attachmentId:String, @NotBlank val filename: String, val data: ByteArray)
 
 @EqualsAndHashCode
-data class UpdateAsset(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank @Min(16) val assetId: String, val data: ByteArray)
+data class UpdateAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank @Min(16) val attachmentId: String, val data: ByteArray)
 
 @EqualsAndHashCode
-data class RemoveAsset(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank @Min(16) val assetId:String)
+data class RemoveAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank @Min(16) val attachmentId:String)
 
