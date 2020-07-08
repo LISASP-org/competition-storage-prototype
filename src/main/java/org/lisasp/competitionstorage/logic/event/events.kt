@@ -13,7 +13,7 @@ data class CompetitionPropertiesUpdated(val id: String,
                                         val organization: String,
                                         val description: String)
 
-data class CompetitionAccepted(val id: String)
+data class CompetitionClosed(val id: String)
 data class CompetitionFinalized(val id: String)
 data class CompetitionReopened(val id: String)
 data class CompetitionRevoked(val id: String)

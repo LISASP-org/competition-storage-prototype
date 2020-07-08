@@ -2,10 +2,7 @@ package org.lisasp.competitionstorage.logic.command
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import java.time.LocalDate
-import javax.validation.constraints.Max
-import javax.validation.constraints.Min
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.*
 
 data class RegisterCompetition(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String,
                                @NotBlank val shortName: String)
@@ -19,12 +16,12 @@ data class UpdateCompetitionProperties(@TargetAggregateIdentifier @NotBlank @Min
                                        @NotBlank val organization: String,
                                        val description: String)
 
-data class AcceptCompetition(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String)
+data class CloseCompetition(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String)
 data class FinalizeCompetition(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String)
 data class ReopenCompetition(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String)
 data class RevokeCompetition(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String)
 
 data class AddAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank val filename: String)
-
+data class UpdateAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank val filename: String, @NotEmpty val data : ByteArray)
 data class RemoveAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank @Min(8) val filename: String)
 

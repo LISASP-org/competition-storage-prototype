@@ -1,12 +1,8 @@
-package org.lisasp.competitionstorage.model;
+package org.lisasp.competitionstorage.logic.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.lisasp.competitionstorage.dto.AttachmentDto;
-import org.lisasp.competitionstorage.dto.ResultDto;
 import org.springframework.data.annotation.Id;
-
-import java.util.Arrays;
 
 public class Result {
 
