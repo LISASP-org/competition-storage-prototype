@@ -1,9 +1,0 @@
-spring:
-  data:
-    mongodb:
-      username: root
-      password: dev
-
-server:
-  error:
-    include-stacktrace: always

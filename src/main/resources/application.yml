@@ -9,7 +9,27 @@ spring:
       database: competitions
       port: 27017
       host: localhost
-server:
+
+  main:
+    allow-bean-definition-overriding: true
   error:
     whitelabel:
       enabled: true
+  jpa:
+    generate-ddl: true
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 16MB
+      max-request-size: 16MB
+
+axon:
+  serializer:
+    events: jackson
+
+springdoc:
+  api-docs:
+    path: '/api-docs'
+  swagger-ui:
+    path: '/api-docs-ui.html'

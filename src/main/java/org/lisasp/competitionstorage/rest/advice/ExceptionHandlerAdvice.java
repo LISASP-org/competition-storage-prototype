@@ -1,5 +1,6 @@
 package org.lisasp.competitionstorage.rest.advice;
 
+import org.axonframework.modelling.command.AggregateNotFoundException;
 import org.lisasp.competitionstorage.logic.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,24 +17,25 @@ public class ExceptionHandlerAdvice {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(AssetNotFoundException.class)
-    String assetNotFoundHandler(AssetNotFoundException ex) {
-        return ex.getMessage();
-    }
-
-    @ResponseBody
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(CompetitionAlreadyExistsException.class)
-    String competitionAlreadyExistsHandler(CompetitionAlreadyExistsException ex) {
+    @ExceptionHandler(AttachmentNotFoundException.class)
+    String attachmentNotFoundHandler(AttachmentNotFoundException ex) {
         return ex.getMessage();
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(CompetitionNotFoundException.class)
-    String competitionNotFoundHandler(CompetitionNotFoundException ex) {
+    @ExceptionHandler(AggregateNotFoundException.class)
+    String aggregateNotFoundHandler(AggregateNotFoundException ex) {
+        return String.format("Competition \"%s\" not found.", ex.getAggregateIdentifier());
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(CompetitionStatusException.class)
+    String competitionStatusHandler(CompetitionStatusException ex) {
         return ex.getMessage();
     }
+
 
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
