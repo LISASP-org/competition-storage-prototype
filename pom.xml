@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<kotlin.version>1.3.72</kotlin.version>
+		<axon.version>4.3.5</axon.version>
 		<maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
 	</properties>
 
@@ -59,7 +60,7 @@
 		<dependency>
 			<groupId>org.axonframework</groupId>
 			<artifactId>axon-spring-boot-starter</artifactId>
-			<version>4.3.4</version>
+			<version>${axon.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.axonframework</groupId>

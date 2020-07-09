@@ -1,4 +1,4 @@
-package org.lisasp.competitionstorage.logic.event
+package org.lisasp.competitionstorage.logic.api
 
 import java.time.LocalDate
 

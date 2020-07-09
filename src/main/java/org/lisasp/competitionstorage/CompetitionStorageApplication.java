@@ -21,32 +21,4 @@ public class CompetitionStorageApplication {
         SpringApplication.run(CompetitionStorageApplication.class, args);
     }
 
-    /*
-    // The Event store `EmbeddedEventStore` delegates actual storage and retrieval of events to an `EventStorageEngine`.
-    @Bean
-    public EmbeddedEventStore eventStore(EventStorageEngine storageEngine, AxonConfiguration configuration) {
-        return EmbeddedEventStore.builder()
-                .storageEngine(storageEngine)
-                .messageMonitor(configuration.messageMonitor(EventStore.class, "eventStore"))
-                .build();
-    }
-
-    // The JpaEventStorageEngine stores events in a JPA-compatible data source
-    @Bean
-    public EventStorageEngine storageEngine(Serializer defaultSerializer,
-                                            PersistenceExceptionResolver persistenceExceptionResolver,
-                                            @Qualifier("eventSerializer") Serializer eventSerializer,
-                                            // AxonConfiguration configuration,
-                                            EntityManagerProvider entityManagerProvider,
-                                            TransactionManager transactionManager) {
-        return JpaEventStorageEngine.builder()
-                .snapshotSerializer(defaultSerializer)
-                // .upcasterChain(configuration.upcasterChain())
-                .persistenceExceptionResolver(persistenceExceptionResolver)
-                .eventSerializer(eventSerializer)
-                .entityManagerProvider(entityManagerProvider)
-                .transactionManager(transactionManager)
-                .build();
-    }
-     */
 }

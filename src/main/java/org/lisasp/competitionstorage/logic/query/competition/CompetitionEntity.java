@@ -13,12 +13,17 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
-public class CompetitionDto {
+public class CompetitionEntity {
 
     @Id
     @Getter
     @Setter
     private String id;
+
+    @Getter
+    @Setter
+    @NotNull
+    private String shortName;
 
     @Getter
     @Setter
@@ -28,11 +33,6 @@ public class CompetitionDto {
     @Getter
     @Setter
     private String name;
-
-    @Getter
-    @Setter
-    @NotNull
-    private String shortName;
 
     @Getter
     @Setter
@@ -58,10 +58,10 @@ public class CompetitionDto {
     @Setter
     private String description;
 
-    public CompetitionDto() {
+    public CompetitionEntity() {
     }
 
-    public CompetitionDto(@NotBlank String id, @NotBlank String shortName) {
+    public CompetitionEntity(@NotBlank String id, @NotBlank String shortName) {
         this.id = id;
         this.shortName = shortName;
     }

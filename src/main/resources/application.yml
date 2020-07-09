@@ -18,6 +18,12 @@ spring:
   jpa:
     generate-ddl: true
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 16MB
+      max-request-size: 16MB
+
 axon:
   serializer:
     events: jackson

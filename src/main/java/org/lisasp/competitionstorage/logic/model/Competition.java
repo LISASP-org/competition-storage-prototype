@@ -5,18 +5,13 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.modelling.command.AggregateLifecycle;
-import org.axonframework.modelling.saga.SagaLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
-import org.lisasp.competitionstorage.logic.command.*;
-import org.lisasp.competitionstorage.logic.event.*;
+import org.lisasp.competitionstorage.logic.api.*;
 import org.lisasp.competitionstorage.logic.exception.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
@@ -59,8 +54,6 @@ public class Competition {
     private String description;
 
     private Set<String> attachments = new HashSet<>();
-
-    private Map<String, Result> results = new HashMap<>();
 
     public Competition() {
     }
@@ -169,6 +162,19 @@ public class Competition {
     @EventHandler
     public void on(CompetitionReopened event) {
         status = CompetitionStatus.Open;
+    }
+
+    @CommandHandler
+    public void revoke(RevokeCompetition command) {
+        assertStatus(CompetitionStatus.Open, CompetitionStatus.Closed, CompetitionStatus.Revoked);
+        if (status != CompetitionStatus.Revoked) {
+            apply(new CompetitionRevoked(id));
+        }
+    }
+
+    @EventHandler
+    public void on(CompetitionRevoked event) {
+        status = CompetitionStatus.Revoked;
     }
 
     @CommandHandler
