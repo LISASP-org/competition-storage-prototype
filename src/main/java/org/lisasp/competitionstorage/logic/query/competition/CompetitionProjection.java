@@ -30,7 +30,7 @@ public class CompetitionProjection {
         if (queryResult.isPresent()) {
             CompetitionEntity entity = queryResult.get();
             entity.setName(event.getName());
-            entity.setCountry(event.getName());
+            entity.setCountry(event.getCountry());
             entity.setStartDate(event.getStartDate());
             entity.setEndDate(event.getEndDate());
             entity.setLocation(event.getLocation());
