@@ -1,6 +1,7 @@
 package org.lisasp.competitionstorage.logic.api
 
 import java.time.LocalDate
+import javax.validation.constraints.Null
 
 data class CompetitionRegistered(val id: String, val shortName: String)
 
@@ -11,7 +12,7 @@ data class CompetitionPropertiesUpdated(val id: String,
                                         val location: String,
                                         val country: String,
                                         val organization: String,
-                                        val description: String)
+                                        @Null val description: String)
 
 data class CompetitionClosed(val id: String)
 data class CompetitionFinalized(val id: String)
