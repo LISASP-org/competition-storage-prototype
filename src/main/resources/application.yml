@@ -26,7 +26,9 @@ spring:
 
 axon:
   serializer:
+    general: jackson
     events: jackson
+    messages: jackson
 
 springdoc:
   api-docs:

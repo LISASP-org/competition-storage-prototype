@@ -13,11 +13,10 @@ import org.axonframework.messaging.responsetypes.InstanceResponseType;
 import org.axonframework.messaging.responsetypes.MultipleInstancesResponseType;
 import org.axonframework.queryhandling.QueryGateway;
 import org.lisasp.competitionstorage.dto.*;
-import org.lisasp.competitionstorage.logic.api.*;
+import org.lisasp.competitionstorage.logic.competition.*;
 import org.lisasp.competitionstorage.logic.query.competition.AllCompetitionsQuery;
 import org.lisasp.competitionstorage.logic.query.competition.CompetitionEntity;
 import org.lisasp.competitionstorage.logic.query.competition.CompetitionQuery;
-import org.lisasp.competitionstorage.logic.storage.AttachmentDataStorage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package org.lisasp.competitionstorage.logic.api
+package org.lisasp.competitionstorage.logic.competition
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import org.bson.types.Binary
@@ -22,7 +22,6 @@ data class FinalizeCompetition(@TargetAggregateIdentifier @NotBlank @Min(16) val
 data class ReopenCompetition(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String)
 data class RevokeCompetition(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String)
 
-data class AddAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank val filename: String)
-data class UpdateAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank val filename: String, @NotNull val data : ByteArray)
-data class RemoveAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val id: String, @NotBlank @Min(8) val filename: String)
-
+data class AddAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val compeitionId: String, @NotBlank @Min(16) val attachmentId: String, @NotBlank val filename: String)
+data class UploadAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val compeitionId: String, @NotBlank val filename: String, val data : ByteArray)
+data class RemoveAttachment(@TargetAggregateIdentifier @NotBlank @Min(16) val competitionId: String, @NotBlank val filename: String)

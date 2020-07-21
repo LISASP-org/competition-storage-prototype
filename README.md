@@ -6,7 +6,10 @@ Stores competitions with their results and additional attachments.
 ### Prerequisites
 
 - maven, jdk 11
-- mongodb (setup see ```setup/docker-mongodb```)
+- mongodb (setup see ```setup/docker/mongodb```)
+- mssql (setup see ```setup/docker/mssql```)
+  - create database ```competition-storage``` with same username and password. 
+- keycloak (setup see ```setup/docker/keycloak```)
 
 ### Build
 

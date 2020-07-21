@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.eventhandling.Timestamp;
 import org.axonframework.queryhandling.QueryHandler;
-import org.lisasp.competitionstorage.logic.api.*;
+import org.lisasp.competitionstorage.logic.competition.*;
 import org.lisasp.competitionstorage.logic.exception.CompetitionNotFoundException;
-import org.lisasp.competitionstorage.logic.model.CompetitionStatus;
+import org.lisasp.competitionstorage.logic.attachment.*;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;

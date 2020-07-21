@@ -1,14 +1,11 @@
 package org.lisasp.competitionstorage.rest;
 
 import lombok.RequiredArgsConstructor;
-import org.lisasp.competitionstorage.logic.storage.AttachmentDataStorage;
+import org.lisasp.competitionstorage.logic.query.attachment.AttachmentDataStorage;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URLDecoder;
-import java.nio.charset.Charset;
-
 @RestController()
-@RequestMapping(value = "/downloads", produces = "application/pdf")
+@RequestMapping(value = "/downloads", produces = "application/x-download")
 @RequiredArgsConstructor
 public class Downloads {
 

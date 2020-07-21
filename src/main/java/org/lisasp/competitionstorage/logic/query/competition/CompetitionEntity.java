@@ -2,7 +2,7 @@ package org.lisasp.competitionstorage.logic.query.competition;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.lisasp.competitionstorage.logic.model.CompetitionStatus;
+import org.lisasp.competitionstorage.logic.competition.CompetitionStatus;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

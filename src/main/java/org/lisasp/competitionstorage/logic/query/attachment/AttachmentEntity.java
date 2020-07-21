@@ -28,14 +28,10 @@ public class AttachmentEntity {
     public AttachmentEntity() {
     }
 
-    public AttachmentEntity(@NotBlank String competitionId, @NotBlank String filename) {
-        this.id = toId(competitionId, filename);
+    public AttachmentEntity(@NotBlank String competitionId, @NotBlank String attachmentId, @NotBlank String filename) {
+        this.id = attachmentId;
         this.competitionId = competitionId;
         this.filename = filename;
-    }
-
-    public static String toId(@NotBlank String competitionId, @NotBlank String filename) {
-        return String.format("%s|%s", competitionId, filename);
     }
 
     public AttachmentDto extractDto() {

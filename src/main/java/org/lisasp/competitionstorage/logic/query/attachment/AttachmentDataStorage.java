@@ -1,9 +1,7 @@
-package org.lisasp.competitionstorage.logic.storage;
+package org.lisasp.competitionstorage.logic.query.attachment;
 
 import lombok.RequiredArgsConstructor;
-import org.bson.types.Binary;
 import org.lisasp.competitionstorage.logic.exception.AttachmentNotFoundException;
-import org.lisasp.competitionstorage.logic.query.attachment.AttachmentEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -21,7 +19,7 @@ public class AttachmentDataStorage {
     private final AttachmentDataRepository repository;
 
     public byte[] fetchAttachmentData(String competitionId, String filename) {
-        Optional<AttachmentDataEntity> data = repository.findById(AttachmentEntity.toId(competitionId, filename));
+        Optional<AttachmentDataEntity> data = repository.findById(AttachmentDataEntity.toId(competitionId, filename));
         if (data.isEmpty()) {
             throw new AttachmentNotFoundException(competitionId, filename);
         }
@@ -32,7 +30,7 @@ public class AttachmentDataStorage {
         return executor.submit(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                String id = AttachmentEntity.toId(competitionId, filename);
+                String id = AttachmentDataEntity.toId(competitionId, filename);
                 Optional<AttachmentDataEntity> result = repository.findById(id);
                 AttachmentDataEntity entity;
                 if (result.isEmpty()) {

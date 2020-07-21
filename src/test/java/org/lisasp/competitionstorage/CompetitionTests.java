@@ -1,12 +1,10 @@
 package org.lisasp.competitionstorage;
 
-import org.axonframework.modelling.command.AggregateNotFoundException;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.lisasp.competitionstorage.logic.api.*;
+import org.lisasp.competitionstorage.logic.competition.*;
 import org.lisasp.competitionstorage.logic.exception.CompetitionStatusException;
-import org.lisasp.competitionstorage.logic.model.Competition;
 
 import java.time.LocalDate;
 

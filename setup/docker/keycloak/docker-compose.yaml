@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  mariadb:
+      image: mariadb
+      container_name: dev-keycloak-db
+      volumes:
+        - mariadb:/var/lib/mysql
+      environment:
+        MYSQL_ROOT_PASSWORD: dev
+        MYSQL_DATABASE: keycloak
+        MYSQL_USER: keycloak
+        MYSQL_PASSWORD: keycloak
+      # Copy-pasted from https://github.com/docker-library/mariadb/issues/94
+      healthcheck:
+        test: ["CMD", "mysqladmin", "ping", "--silent"]
+      restart: always
+
+  keycloak:
+      #image: quay.io/keycloak/keycloak:latest
+      image: jboss/keycloak
+      container_name: dev-keycloak-app
+      environment:
+        DB_VENDOR: mariadb
+        DB_ADDR: mariadb
+        DB_DATABASE: keycloak
+        DB_USER: keycloak
+        DB_PASSWORD: keycloak
+        KEYCLOAK_USER: dev
+        KEYCLOAK_PASSWORD: dev
+        #KEYCLOAK_FRONTEND_URL: https://dev.lisasp.org/
+        #PROXY_ADDRESS_FORWARDING: "true"
+        #JGROUPS_DISCOVERY_PROTOCOL: JDBC_PING
+        #JGROUPS_DISCOVERY_PROPERTIES: datasource_jndi_name=java:jboss/datasources/KeycloakDS,info_writer_sleep_time=500
+      ports:
+        - "7080:8080"
+      links:
+        - mariadb:mariadb
+      depends_on:
+        - mariadb
+      restart: always
+
+volumes:
+  mariadb:
+      driver: local

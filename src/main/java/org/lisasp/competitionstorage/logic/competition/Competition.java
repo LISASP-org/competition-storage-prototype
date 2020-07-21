@@ -1,17 +1,15 @@
-package org.lisasp.competitionstorage.logic.model;
+package org.lisasp.competitionstorage.logic.competition;
 
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
-import org.lisasp.competitionstorage.logic.api.*;
 import org.lisasp.competitionstorage.logic.exception.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
@@ -21,12 +19,12 @@ public class Competition {
     @AggregateIdentifier
     private String id;
 
+    @NotNull
+    private String shortName;
+
     private CompetitionStatus status = CompetitionStatus.Open;
 
     private String name;
-
-    @NotNull
-    private String shortName;
 
     private LocalDate startDate;
 
@@ -40,7 +38,7 @@ public class Competition {
 
     private String description;
 
-    private Set<String> attachments = new HashSet<>();
+    private List<Attachment> attachments = new ArrayList<>();
 
     public Competition() {
     }
@@ -128,28 +126,6 @@ public class Competition {
         status = CompetitionStatus.Revoked;
     }
 
-    @CommandHandler
-    public void addAttachment(AddAttachment command) {
-        apply(new AttachmentAdded(command.getId(), command.getFilename()));
-    }
-
-    @EventSourcingHandler
-    public void on(AttachmentAdded event) {
-        attachments.add(event.getFilename());
-    }
-
-    @CommandHandler
-    public void removeAttachment(RemoveAttachment command) {
-        if (attachments.contains(command.getFilename())) {
-            apply(new AttachmentRemoved(command.getId(), command.getFilename()));
-        }
-    }
-
-    @EventSourcingHandler
-    public void on(AttachmentRemoved event) {
-        attachments.remove(event.getFilename());
-    }
-
     private void assertStatus(CompetitionStatus... expected) {
         for (CompetitionStatus cs : expected) {
             if (status == cs) {
@@ -157,6 +133,57 @@ public class Competition {
             }
         }
         throw new CompetitionStatusException(expected, status);
+    }
+
+    @CommandHandler
+    public void addAttachment(AddAttachment command) {
+        Optional<Attachment> attachment = getAttachment(command.getFilename(), false);
+        if (!attachment.isPresent()) {
+            apply(new AttachmentAdded(command.getCompeitionId(), command.getAttachmentId(), command.getFilename()));
+        }
+    }
+
+    @EventHandler
+    public void on(AttachmentAdded event) {
+        getAttachment(event.getFilename(), true).get().on(event);
+    }
+
+    @CommandHandler
+    public void updateAttachment(UploadAttachment command) {
+        assertAttachmentExists(command.getFilename());
+        getAttachment(command.getFilename(), false).get().upload(command);
+    }
+
+    @EventHandler
+    public void on(AttachmentUploaded event) {
+        getAttachment(event.getFilename(), true).get().on(event);
+    }
+
+    @CommandHandler
+    public void revokeAttachment(RemoveAttachment command) {
+        if (getAttachment(command.getFilename(), false).isPresent()) {
+            getAttachment(command.getFilename(),false).get().revoke(command);
+        }
+    }
+
+    @EventHandler
+    public void on(AttachmentRemoved event) {
+        attachments.removeIf(a -> a.matchesFilename(event.getFilename()));
+    }
+
+    private void assertAttachmentExists(String filename) {
+        if (getAttachment(filename,false).isEmpty()) {
+            throw new AttachmentNotFoundException(this.id, filename);
+        }
+    }
+
+    private Optional<Attachment> getAttachment(String filename, boolean createIfNotFound) {
+        Optional<Attachment> attachment = attachments.stream().filter(a -> a.matchesFilename(filename)).findFirst();
+        if (attachment.isEmpty() && createIfNotFound) {
+            attachment = Optional.of(new Attachment(filename));
+            attachments.add(attachment.get());
+        }
+        return attachment;
     }
 
     private boolean hasChanges(UpdateCompetitionProperties command) {

@@ -1,4 +1,4 @@
-package org.lisasp.competitionstorage.logic.storage;
+package org.lisasp.competitionstorage.logic.query.attachment;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,5 +28,9 @@ public class AttachmentDataEntity {
     public AttachmentDataEntity(@NotBlank String id, @NotNull byte[] data) {
         this.id = id;
         this.data = data;
+    }
+
+    static String toId(String competitionId, String filename) {
+        return String.format("%s|%s", competitionId, filename);
     }
 }

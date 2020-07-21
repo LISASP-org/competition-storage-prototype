@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  mssql:
+    container_name: mssql
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: 'dev!23456'
+      TZ: 'Europe/Berlin'
+      MSSQL_PID: 'Express'
+    ports:
+        - 1433:1433
+        #    volumes:
+            #      - data:/var/opt/mssql/data
+        #      - log:/var/opt/mssql/data
+        #      - secrets:/var/opt/mssql/secrets
+    cap_add:
+      - NET_ADMIN
+      - NET_BIND_SERVICE
+      - NET_RAW
+    restart: always
+    #volumes:
+        #        secrets:
+        #        log: 
+        #        data:

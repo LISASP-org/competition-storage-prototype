@@ -1,6 +1,6 @@
 package org.lisasp.competitionstorage.logic.exception;
 
-import org.lisasp.competitionstorage.logic.model.CompetitionStatus;
+import org.lisasp.competitionstorage.logic.competition.CompetitionStatus;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
