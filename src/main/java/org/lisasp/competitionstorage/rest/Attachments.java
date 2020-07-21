@@ -17,6 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 @RestController()
@@ -30,6 +33,8 @@ public class Attachments {
 
     private final IdentifierFactory identifierFactory = IdentifierFactory.getInstance();
 
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+
     @PostMapping("/")
     Future<Void> addAttachment(@RequestBody AddAttachmentDto attachment, @PathVariable String competitionId) {
         return commandGateway.send(new AddAttachment(competitionId, identifierFactory.generateIdentifier(), attachment.getFilename()));
@@ -38,8 +43,11 @@ public class Attachments {
     @PutMapping("/{competitionId}/{filename}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     Future<Void> updateAttachment(@RequestBody UploadAttachmentDto attachment, @PathVariable String competitionId, @PathVariable String filename) {
-        commandGateway.send(new UploadAttachment(competitionId, filename, attachment.getData()));
-        return storage.storeAttachment(competitionId, filename, attachment.getData());
+        return executor.submit(() -> {
+            commandGateway.send(new UploadAttachment(competitionId, filename, attachment.getData()));
+            storage.storeAttachment(competitionId, filename, attachment.getData());
+            return null;
+        });
     }
 
     @DeleteMapping("/{competitionId}/{filename}")
