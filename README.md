@@ -9,6 +9,7 @@ Stores competitions with their results and additional attachments.
 - mongodb (setup see ```setup/docker/mongodb```)
 - mssql (setup see ```setup/docker/mssql```)
   - create database ```competition-storage``` with same username and password. 
+  - execute query ```setup/sqlserver/InitializeDatabase.sql```
 - keycloak (setup see ```setup/docker/keycloak```)
 
 ### Build
