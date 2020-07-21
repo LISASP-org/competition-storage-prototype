@@ -1,7 +1,7 @@
 package org.lisasp.competitionstorage.logic.competition;
 
 import lombok.EqualsAndHashCode;
-import lombok.Value;
+import org.lisasp.competitionstorage.logic.exception.DataMissingException;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -29,6 +29,7 @@ public class Attachment {
     }
 
     void upload(UploadAttachment command){
+        assertDataIsPresent(command);
         apply(new AttachmentUploaded(command.getCompeitionId(), command.getFilename()));
     }
 
@@ -50,5 +51,11 @@ public class Attachment {
     @Override
     public String toString() {
         return String.format("id: '%s', filename: '%s', status: '%s'", id, filename, status);
+    }
+
+    private void assertDataIsPresent(UploadAttachment command) {
+        if (command.getData() == null || command.getData().length == 0) {
+            throw new DataMissingException(command.getCompeitionId(), command.getFilename());
+        }
     }
 }
