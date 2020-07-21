@@ -20,6 +20,6 @@ data class UpdateCompetitionDto(@NotBlank @Min(8) @Max(100) val name: String,
 
 data class AddAttachmentDto(@NotBlank val filename: String)
 
-data class UpdateAttachmentDto(@NotNull val data: ByteArray)
+data class UploadAttachmentDto(@NotNull val data: ByteArray)
 
 data class AttachmentDto(@NotBlank val competitionId: String, @NotBlank val filename: String)

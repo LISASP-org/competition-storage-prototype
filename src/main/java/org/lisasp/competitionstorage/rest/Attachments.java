@@ -37,7 +37,7 @@ public class Attachments {
 
     @PutMapping("/{competitionId}/{filename}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    Future<Void> updateAttachment(@RequestBody UpdateAttachmentDto attachment, @PathVariable String competitionId, @PathVariable String filename) {
+    Future<Void> updateAttachment(@RequestBody UploadAttachmentDto attachment, @PathVariable String competitionId, @PathVariable String filename) {
         commandGateway.send(new UploadAttachment(competitionId, filename, attachment.getData()));
         return storage.storeAttachment(competitionId, filename, attachment.getData());
     }
