@@ -7,7 +7,6 @@ import org.lisasp.competitionstorage.dto.AttachmentDto;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Entity
 public class AttachmentEntity {
@@ -24,6 +23,10 @@ public class AttachmentEntity {
     @Getter
     @Setter
     private String filename;
+
+    @Getter
+    @Setter
+    private String status = "new";
 
     public AttachmentEntity() {
     }
