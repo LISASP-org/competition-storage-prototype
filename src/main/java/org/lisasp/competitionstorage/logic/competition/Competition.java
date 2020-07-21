@@ -38,7 +38,7 @@ public class Competition {
 
     private String description;
 
-    private List<Attachment> attachments = new ArrayList<>();
+    private final List<Attachment> attachments = new ArrayList<>();
 
     public Competition() {
     }
@@ -205,10 +205,7 @@ public class Competition {
         if (isDifferent(organization, command.getOrganization())) {
             return true;
         }
-        if (isDifferent(description, command.getDescription())) {
-            return true;
-        }
-        return false;
+        return isDifferent(description, command.getDescription());
     }
 
     private boolean isDifferent(Object a, Object b) {
