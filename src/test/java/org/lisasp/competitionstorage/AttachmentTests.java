@@ -29,7 +29,7 @@ public class AttachmentTests {
     @Test
     void testUpdateAttachment() {
         executor.andGiven(new AttachmentAdded("competitionId", "attachmentId", "file.pdf"))
-                .when(new UploadAttachment("competitionId", "file.pdf", new byte[0]))
+                .when(new UploadAttachment("competitionId", "file.pdf", new byte[13]))
                 .expectEvents(new AttachmentUploaded("competitionId", "file.pdf"));
     }
 

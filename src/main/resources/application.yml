@@ -24,6 +24,19 @@ spring:
       max-file-size: 16MB
       max-request-size: 16MB
 
+  artemis:
+    mode: embedded
+    host: localhost
+    port: 61616
+    user: dev
+    password: dev
+    embedded:
+      enabled: true
+
+  jms:
+    template:
+      default-destination: my-queue-1
+
 axon:
   serializer:
     general: jackson
@@ -35,3 +48,12 @@ springdoc:
     path: '/api-docs'
   swagger-ui:
     path: '/api-docs-ui.html'
+
+logging:
+  level:
+    org:
+      apache:
+        activemq:
+          audit:
+            base: WARN
+            message: WARN

@@ -26,7 +26,7 @@ enum class SexIndividual { MALE, FEMALE }
 enum class SexTeam { MALE, FEMALE, MIXED }
 enum class CompetitionType { POOL, OPENWATER }
 
-data class Individual(@NotBlank val fistName: String, @NotBlank val lastName: String, @NotBlank val sex: SexIndividual, @Min(0) val yearOfBirth: Int, @NotBlank val agegroup: String, @NotNull val results: List<Result>);
+data class Individual(@NotBlank val firstName: String, @NotBlank val lastName: String, @NotBlank val sex: SexIndividual, @Min(0) val yearOfBirth: Int, @NotBlank val agegroup: String, @NotNull val results: List<Result>);
 data class Team(@NotBlank val name: String, @NotNull val members: List<Individual>, @NotBlank val sex: SexTeam, @NotBlank val agegroup: String, @NotNull val results: List<Result>);
 data class Result(@NotBlank val discipline: String, @Min(0) val timeInMilliseconds: Long, @NotNull val penalty: String, val event: Int, val heat: Int, val lane: Int, val round: Int)
 data class ResultsDto(@NotNull val type: CompetitionType, @NotNull val individuals: List<Individual>, @NotNull val teams: List<Team>)

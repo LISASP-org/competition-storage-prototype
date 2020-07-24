@@ -13,10 +13,11 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
-@Configuration
-@EnableWebSocketMessageBroker
+//@Configuration
+//@EnableWebSocketMessageBroker
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
+	/*
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		config.enableSimpleBroker("/topic", "/queue");
@@ -57,4 +58,5 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 	public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> list) {
 
 	}
+	 */
 }
