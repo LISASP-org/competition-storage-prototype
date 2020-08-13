@@ -1,7 +1,6 @@
 package org.lisasp.competitionstorage.logic.competition
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier
-import org.bson.types.Binary
 import java.time.LocalDate
 import javax.validation.constraints.*
 

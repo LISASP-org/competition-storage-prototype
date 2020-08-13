@@ -1,5 +1,6 @@
-package org.lisasp.competitionstorage.dto
+package org.lisasp.messages
 
+import lombok.EqualsAndHashCode
 import java.time.LocalDate
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
@@ -30,3 +31,6 @@ data class Individual(@NotBlank val firstName: String, @NotBlank val lastName: S
 data class Team(@NotBlank val name: String, @NotNull val members: List<Individual>, @NotBlank val sex: SexTeam, @NotBlank val agegroup: String, @NotNull val results: List<Result>);
 data class Result(@NotBlank val discipline: String, @Min(0) val timeInMilliseconds: Long, @NotNull val penalty: String, val event: Int, val heat: Int, val lane: Int, val round: Int)
 data class ResultsDto(@NotNull val type: CompetitionType, @NotNull val individuals: List<Individual>, @NotNull val teams: List<Team>)
+
+enum class MessageType { JSON, PDF }
+data class ResultsMessage(@NotBlank val competitionId: String, @NotBlank val filename: String, val type: MessageType, @NotNull val results: ByteArray)

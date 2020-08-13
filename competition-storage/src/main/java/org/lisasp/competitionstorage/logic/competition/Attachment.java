@@ -1,6 +1,7 @@
 package org.lisasp.competitionstorage.logic.competition;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.lisasp.competitionstorage.logic.exception.DataMissingException;
 
 import javax.validation.constraints.NotEmpty;
@@ -12,6 +13,7 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 public class Attachment {
 
     @NotNull
+    @Getter
     private String id;
 
     @NotEmpty

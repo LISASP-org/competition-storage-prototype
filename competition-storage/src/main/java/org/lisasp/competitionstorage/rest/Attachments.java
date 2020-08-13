@@ -8,19 +8,17 @@ import org.axonframework.common.IdentifierFactory;
 import org.axonframework.messaging.responsetypes.InstanceResponseType;
 import org.axonframework.messaging.responsetypes.MultipleInstancesResponseType;
 import org.axonframework.queryhandling.QueryGateway;
-import org.lisasp.competitionstorage.dto.AddAttachmentDto;
-import org.lisasp.competitionstorage.dto.AttachmentDto;
-import org.lisasp.competitionstorage.dto.ResultsDto;
-import org.lisasp.competitionstorage.dto.UploadAttachmentDto;
 import org.lisasp.competitionstorage.logic.competition.AddAttachment;
 import org.lisasp.competitionstorage.logic.competition.RemoveAttachment;
 import org.lisasp.competitionstorage.logic.competition.UploadAttachment;
 import org.lisasp.competitionstorage.logic.exception.AttachmentNotFoundException;
 import org.lisasp.competitionstorage.logic.exception.CouldNotSerializeException;
-import org.lisasp.competitionstorage.logic.query.attachment.AttachmentDataStorage;
 import org.lisasp.competitionstorage.logic.query.attachment.AttachmentFilenameQuery;
 import org.lisasp.competitionstorage.logic.query.attachment.AttachmentIdQuery;
 import org.lisasp.competitionstorage.logic.query.attachment.AttachmentsPerCompetitionQuery;
+import org.lisasp.competitionstorage.messaging.ResultMessageConverter;
+import org.lisasp.competitionstorage.messaging.Sender;
+import org.lisasp.messages.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,15 +37,17 @@ public class Attachments {
 
     private final QueryGateway gateway;
     private final CommandGateway commandGateway;
-    private final AttachmentDataStorage storage;
+
+    private final Sender sender;
+
+    private final ResultMessageConverter converter;
 
     private final IdentifierFactory identifierFactory = IdentifierFactory.getInstance();
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @PostMapping("/")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    Future<Void> addAttachment(@RequestBody AddAttachmentDto attachment) {
+    Future<String> addAttachment(@RequestBody AddAttachmentDto attachment) {
         return commandGateway.send(new AddAttachment(attachment.getCompetitionId(), identifierFactory.generateIdentifier(), attachment.getFilename()));
     }
 
@@ -59,7 +59,7 @@ public class Attachments {
             AttachmentDto entity = gateway.query(new AttachmentIdQuery(attachmentId), new InstanceResponseType<>(AttachmentDto.class)).get();
             assertAttachmentExists(attachmentId, entity);
             commandGateway.send(new UploadAttachment(entity.getCompetitionId(), entity.getFilename(), data));
-            storage.storeAttachment(entity.getCompetitionId(), entity.getFilename(), data);
+            sender.send(new ResultsMessage(entity.getCompetitionId(), entity.getFilename(), MessageType.JSON, converter.toBytes(attachment)));
             return null;
         });
     }
@@ -71,7 +71,7 @@ public class Attachments {
             AttachmentDto entity = gateway.query(new AttachmentIdQuery(attachmentId), new InstanceResponseType<>(AttachmentDto.class)).get();
             assertAttachmentExists(attachmentId, entity);
             commandGateway.send(new UploadAttachment(entity.getCompetitionId(), entity.getFilename(), attachment.getData()));
-            storage.storeAttachment(entity.getCompetitionId(), entity.getFilename(), attachment.getData());
+            sender.send(new ResultsMessage(entity.getCompetitionId(), entity.getFilename(), MessageType.PDF, attachment.getData()));
             return null;
         });
     }

@@ -12,7 +12,8 @@ import org.axonframework.common.IdentifierFactory;
 import org.axonframework.messaging.responsetypes.InstanceResponseType;
 import org.axonframework.messaging.responsetypes.MultipleInstancesResponseType;
 import org.axonframework.queryhandling.QueryGateway;
-import org.lisasp.competitionstorage.dto.*;
+import org.lisasp.competitionstorage.messaging.Sender;
+import org.lisasp.messages.*;
 import org.lisasp.competitionstorage.logic.competition.*;
 import org.lisasp.competitionstorage.logic.query.competition.AllCompetitionsQuery;
 import org.lisasp.competitionstorage.logic.query.competition.CompetitionEntity;
@@ -32,6 +33,7 @@ public class Competitions {
     private final IdentifierFactory identifierFactory = IdentifierFactory.getInstance();
     private final QueryGateway gateway;
     private final CommandGateway commandGateway;
+    private final Sender sender;
 
     @PostMapping("")
     Future<String> register(Principal principal, @RequestBody RegisterCompetitionDto dto) {

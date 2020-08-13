@@ -5,7 +5,7 @@ import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.eventhandling.Timestamp;
 import org.axonframework.queryhandling.QueryHandler;
 import org.jetbrains.annotations.NotNull;
-import org.lisasp.competitionstorage.dto.AttachmentDto;
+import org.lisasp.messages.AttachmentDto;
 import org.lisasp.competitionstorage.logic.competition.AttachmentAdded;
 import org.lisasp.competitionstorage.logic.competition.AttachmentRemoved;
 import org.lisasp.competitionstorage.logic.competition.AttachmentUploaded;

@@ -1,8 +1,7 @@
-package org.lisasp.competitionstorage.logic.query.attachment;
+package org.lisasp.attachmentstorage.storage;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.types.Binary;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

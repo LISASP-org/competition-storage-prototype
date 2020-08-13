@@ -1,0 +1,25 @@
+spring:
+  data:
+    mongodb:
+      username: root
+      password: dev
+
+  artemis:
+    host: localhost
+    user: dev
+    password: dev
+
+server:
+  error:
+    include-stacktrace: always
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          filter:
+#            CommonsRequestLoggingFilter: DEBUG
+
+  file:
+    name: "dev.log"

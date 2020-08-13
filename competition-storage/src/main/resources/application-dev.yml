@@ -25,6 +25,11 @@ spring:
 #      enabled: true
 #      path: '/h2-console'
 
+  artemis:
+    host: localhost
+    user: dev
+    password: dev
+
 server:
   error:
     include-stacktrace: always
@@ -35,7 +40,7 @@ logging:
       springframework:
         web:
           filter:
-            CommonsRequestLoggingFilter: DEBUG
+#            CommonsRequestLoggingFilter: DEBUG
 
   file:
     name: "dev.log"

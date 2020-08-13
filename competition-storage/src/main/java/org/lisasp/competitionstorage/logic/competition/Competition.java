@@ -136,11 +136,13 @@ public class Competition {
     }
 
     @CommandHandler
-    public void addAttachment(AddAttachment command) {
+    public String addAttachment(AddAttachment command) {
         Optional<Attachment> attachment = getAttachment(command.getFilename(), false);
-        if (!attachment.isPresent()) {
-            apply(new AttachmentAdded(command.getCompeitionId(), command.getAttachmentId(), command.getFilename()));
+        if (attachment.isPresent()) {
+            return attachment.get().getId();
         }
+        apply(new AttachmentAdded(command.getCompeitionId(), command.getAttachmentId(), command.getFilename()));
+        return command.getAttachmentId();
     }
 
     @EventHandler

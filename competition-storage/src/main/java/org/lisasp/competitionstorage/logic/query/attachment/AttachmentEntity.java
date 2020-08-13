@@ -2,7 +2,7 @@ package org.lisasp.competitionstorage.logic.query.attachment;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.lisasp.competitionstorage.dto.AttachmentDto;
+import org.lisasp.messages.AttachmentDto;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

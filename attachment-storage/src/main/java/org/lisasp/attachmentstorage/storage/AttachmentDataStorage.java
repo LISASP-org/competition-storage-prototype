@@ -1,11 +1,10 @@
-package org.lisasp.competitionstorage.logic.query.attachment;
+package org.lisasp.attachmentstorage.storage;
 
 import lombok.RequiredArgsConstructor;
-import org.lisasp.competitionstorage.logic.exception.AttachmentNotFoundException;
+import org.lisasp.attachmentstorage.exception.AttachmentNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-import java.util.concurrent.Future;
 
 @Component
 @RequiredArgsConstructor

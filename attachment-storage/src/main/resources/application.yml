@@ -1,3 +1,4 @@
+
 spring:
   profiles:
     active: dev
@@ -57,3 +58,6 @@ logging:
 
 competition-storage:
   queue: competition-storage
+
+server:
+  port: 8081

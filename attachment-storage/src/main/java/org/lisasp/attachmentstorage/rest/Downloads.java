@@ -1,7 +1,7 @@
-package org.lisasp.competitionstorage.rest;
+package org.lisasp.attachmentstorage.rest;
 
 import lombok.RequiredArgsConstructor;
-import org.lisasp.competitionstorage.logic.query.attachment.AttachmentDataStorage;
+import org.lisasp.attachmentstorage.storage.AttachmentDataStorage;
 import org.springframework.web.bind.annotation.*;
 
 @RestController()
